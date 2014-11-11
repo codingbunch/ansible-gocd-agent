@@ -1,0 +1,29 @@
+---
+# The playbook for Scala tasks
+
+- name: Download Scala
+  command: >
+    wget http://www.scala-lang.org/files/archive/scala-{{ scala_version }}.tgz 
+    chdir=/tmp 
+    creates=/tmp/scala-{{ scala_version }}.tgz
+  tags: scala
+
+- name: Unarchive the compressed Scala binaries
+  unarchive: "copy=no src=/tmp/scala-{{ scala_version }}.tgz dest=/usr/local creates=/usr/local/scala-{{ scala_version }}"
+  tags: scala
+
+- name: Set the permissions on the Scala binaries
+  file: "path=/usr/local/scala-{{ scala_version }}/bin state=directory mode=0755 recurse=yes"
+  tags: scala
+
+- name: Update the symbolic link to the Scala install
+  file: "path=/usr/local/scala src=/usr/local/scala-{{ scala_version }} state=link force=yes"
+  tags: scala
+
+- name: Set SCALA_HOME environment variable
+  lineinfile: dest=/etc/environment regexp='^SCALA_HOME.*' line='SCALA_HOME=/usr/local/scala' insertbefore='^PATH.*'
+  tags: scala 
+
+- name: add Scala binaries to PATH environment variable
+  lineinfile: dest=/etc/environment state=present backrefs=yes regexp='PATH=(["]*)((?!.*?/usr/local/scala/bin).*?)(["]*)$' line="PATH=\1\2:/usr/local/scala/bin\3"
+  tags: scala  

@@ -1,0 +1,29 @@
+---
+# The playbook for SBT tasks
+
+- name: Download SBT
+  command: > 
+    wget https://dl.bintray.com/sbt/native-packages/sbt/{{ sbt_version }}/sbt-{{ sbt_version }}.tgz 
+    chdir=/tmp 
+    creates=/tmp/sbt-{{ sbt_version }}.tgz
+  tags: sbt
+
+- name: Unarchive the compressed SBT binaries
+  unarchive: "copy=no src=/tmp/sbt-{{ sbt_version }}.tgz dest=/usr/local creates=/usr/local/sbt-{{ sbt_version }}"
+  tags: sbt
+
+- name: Make SBT script executable
+  file: path=/usr/local/sbt/bin/sbt mode=755
+  tags: sbt
+
+- name: Set SBT_HOME environment variable
+  lineinfile: dest=/etc/environment regexp='^SBT_HOME.*' line='SBT_HOME=/usr/local/sbt' insertbefore='^PATH.*'
+  tags: sbt 
+
+- name: Set SBT_OPTS environment variable
+  lineinfile: dest=/etc/environment regexp='^SBT_OPTS.*' line='SBT_OPTS="-Xms512M -Xmx1536M -Xss1M -XX:+CMSClassUnloadingEnabled -XX:MaxPermSize=256M"' insertafter='^SBT_HOME.*'
+  tags: sbt
+
+- name: Add SBT binaries to PATH environment variable
+  lineinfile: dest=/etc/environment state=present backrefs=yes regexp='PATH=(["]*)((?!.*?/usr/local/sbt/bin).*?)(["]*)$' line="PATH=\1\2:/usr/local/sbt/bin\3"
+  tags: sbt 

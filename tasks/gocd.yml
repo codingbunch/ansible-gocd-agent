@@ -1,0 +1,24 @@
+---
+# The playbook for GOCD tasks
+
+- name: Download GOCD Agent
+  command: >
+    wget http://download.go.cd/gocd-deb/go-agent-{{ gocd_version }}.deb 
+    chdir=/tmp 
+    creates=/tmp/go-agent-{{ gocd_version }}.deb
+  tags: gocd
+
+- name: Install GOCD Agent .deb package
+  apt: deb=/tmp/go-agent-{{ gocd_version }}.deb
+  tags: gocd
+
+- name: Enable gocd agent service
+  service: name=go-agent enabled=yes state=started
+  register: gocd_install
+  tags: gocd
+
+- name: Update GO_SERVER variable with the server IP address
+  lineinfile: dest=/etc/default/go-agent regexp=^GO_SERVER= line=GO_SERVER={{ item }}
+  with_items: groups['gocd-server']
+  notify: restart go-agent
+  tags: gocd

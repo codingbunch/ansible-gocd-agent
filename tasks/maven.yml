@@ -1,0 +1,33 @@
+---
+# The playbook for Maven tasks
+
+- name: Download Maven
+  command: >
+    wget http://apache.rediris.es/maven/maven-3/{{ maven_version }}/binaries/apache-maven-{{ maven_version }}-bin.tar.gz 
+    chdir=/tmp 
+    creates=/tmp/apache-maven-{{ maven_version }}-bin.tar.gz
+  tags: maven
+
+- name: Unarchive the compressed Maven binaries
+  unarchive: "copy=no src=/tmp/apache-maven-{{ maven_version }}-bin.tar.gz dest=/usr/local creates=/usr/local/apache-maven-{{ maven_version }}"
+  tags: maven
+
+- name: Update the symbolic link to the Maven install
+  file: "path=/usr/local/maven src=/usr/local/apache-maven-{{ maven_version }} state=link force=yes"
+  tags: maven    
+
+- name: Set M2_HOME environment variable
+  lineinfile: dest=/etc/environment regexp='^M2_HOME.*' line='M2_HOME=/usr/local/maven' insertbefore='^PATH.*'
+  tags: maven 
+
+- name: Set M2 environment variable
+  lineinfile: dest=/etc/environment regexp='^M2=.*' line='M2=/usr/local/maven/bin' insertafter='^M2_HOME.*'
+  tags: maven   
+
+- name: Set MAVEN_OPTS environment variable
+  lineinfile: dest=/etc/environment regexp='^MAVEN_OPTS=.*' line='MAVEN_OPTS="-Xms256m -Xmx512m"' insertafter='^M2.*'
+  tags: maven     
+
+- name: Add Maven binaries to PATH environment variable
+  lineinfile: dest=/etc/environment state=present backrefs=yes regexp='PATH=(["]*)((?!.*?/usr/local/maven/bin).*?)(["]*)$' line="PATH=\1\2:/usr/local/maven/bin\3"
+  tags: maven 

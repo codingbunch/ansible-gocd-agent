@@ -1,0 +1,25 @@
+---
+# The playbook for Ant tasks
+
+- name: Download Ant
+  command: >
+    wget http://apache.rediris.es/ant/binaries/apache-ant-{{ ant_version }}-bin.tar.gz 
+    chdir=/tmp 
+    creates=/tmp/apache-ant-{{ ant_version }}-bin.tar.gz
+  tags: ant
+
+- name: Unarchive the compressed Ant binaries
+  unarchive: "copy=no src=/tmp/apache-ant-{{ ant_version }}-bin.tar.gz dest=/usr/local creates=/usr/local/apache-ant-{{ ant_version }}"
+  tags: ant
+
+- name: Update the symbolic link to the Ant install
+  file: "path=/usr/local/ant src=/usr/local/apache-ant-{{ ant_version }} state=link force=yes"
+  tags: ant  
+
+- name: Set ANT_HOME environment variable
+  lineinfile: dest=/etc/environment regexp='^ANT_HOME.*' line='ANT_HOME=/usr/local/ant' insertbefore='^PATH.*'
+  tags: ant
+
+- name: Add Ant binaries to PATH environment variable
+  lineinfile: dest=/etc/environment state=present backrefs=yes regexp='PATH=(["]*)((?!.*?/usr/local/ant/bin).*?)(["]*)$' line="PATH=\1\2:/usr/local/ant/bin\3"
+  tags: ant   

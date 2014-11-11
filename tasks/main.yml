@@ -1,0 +1,52 @@
+---
+# Add base packages
+
+- name: Update apt
+  apt: update_cache=yes cache_valid_time=3600
+  sudo: yes
+  tags: update
+
+- name: Upgrade OS
+  apt: upgrade=safe
+  sudo: yes
+  tags: update  
+
+- include: base.yml 
+  sudo: yes
+  tags: base
+
+- include: docker.yml 
+  sudo: yes
+  tags: base  
+
+- include: oraclejdk.yml
+  sudo: yes
+  tags: java
+
+- include: scala.yml
+  sudo: yes
+  tags: scala  
+
+- include: maven.yml
+  sudo: yes
+  tags: maven
+
+- include: ant.yml
+  sudo: yes
+  tags: ant
+
+- include: gradle.yml
+  sudo: yes
+  tags: gradle  
+
+- include: sbt.yml
+  sudo: yes
+  tags: sbt  
+
+- include: nodejs.yml
+  sudo: yes
+  tags: nodejs  
+
+- include: gocd.yml
+  sudo: yes
+  tags: gocd  

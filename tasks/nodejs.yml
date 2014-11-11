@@ -1,0 +1,15 @@
+---
+# The playbook for NodeJS tasks
+
+- name: Add NodeJS repository
+  command: bash -c "curl -sL https://deb.nodesource.com/setup | sudo bash -"
+  tags: nodejs
+
+- name: Install NodeJS package
+  apt: name=nodejs state=latest
+  tags: nodejs
+
+- name: NPM Install global packages
+  npm: name={{item}} global=yes
+  with_items: nodejs_global_packages
+  tags: nodejs  

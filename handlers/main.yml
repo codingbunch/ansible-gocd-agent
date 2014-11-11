@@ -1,0 +1,17 @@
+---
+
+- name: update timezone
+  command: dpkg-reconfigure --frontend noninteractive tzdata
+  sudo: yes
+
+- name: restart ntp
+  service: name=ntp state=restarted
+  sudo: yes
+
+- name: restart go-agent
+  service: name=go-agent state=restarted
+  sudo: yes
+
+- name: restart docker
+  service: name=docker.io state=restarted
+  sudo: yes  

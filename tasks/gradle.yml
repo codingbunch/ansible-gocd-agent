@@ -1,0 +1,28 @@
+---
+# The playbook for Gradle tasks
+
+- name: Download Gradle
+  command: >
+    wget https://services.gradle.org/distributions/gradle-{{ gradle_version }}-bin.zip 
+    chdir=/tmp 
+    creates=/tmp/gradle-{{ gradle_version }}-bin.zip
+
+- name: Unarchive the compressed Gradle binaries
+  unarchive: "copy=no src=/tmp/gradle-{{ gradle_version }}-bin.zip dest=/usr/local creates=/usr/local/gradle-{{ gradle_version }}"
+  tags: gradle
+
+- name: Update the symbolic link to the Gradle install
+  file: "path=/usr/local/gradle src=/usr/local/gradle-{{ gradle_version }} state=link force=yes"
+  tags: gradle  
+
+- name: Set GRADLE_HOME environment variable
+  lineinfile: dest=/etc/environment regexp='^GRADLE_HOME.*' line='GRADLE_HOME=/usr/local/gradle' insertbefore='^PATH.*'
+  tags: gradle   
+
+- name: Set GRADLE_OPTS environment variable
+  lineinfile: dest=/etc/environment regexp='^GRADLE_OPTS.*' line='GRADLE_OPTS="-Xms256m -Xmx512m"' insertafter='^GRADLE_HOME.*'
+  tags: gradle    
+
+- name: Add Gradle binaries to PATH environment variable
+  lineinfile: dest=/etc/environment state=present backrefs=yes regexp='PATH=(["]*)((?!.*?/usr/local/gradle/bin))(["]*)$' line="PATH=\1\2:/usr/local/gradle/bin\3"
+  tags: gradle   

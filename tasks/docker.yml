@@ -1,0 +1,19 @@
+---
+# tasks file for docker
+
+- name: Install Docker packages
+  apt: pkg=docker.io state=latest
+  tags: docker
+
+- name: Create Docker symlink
+  file: src=/usr/bin/docker.io dest=/usr/local/bin/docker state=link force=yes
+  tags: docker
+
+- name: Add autocomplete
+  command: sed -i '$acomplete -F _docker docker' /etc/bash_completion.d/docker.io
+  tags: docker
+
+- name: Expose Docker remote api
+  lineinfile: dest=/etc/default/docker.io line='DOCKER_OPTS="-H tcp://127.0.0.1:2375 -H unix:///var/run/docker.sock"' state=present
+  notify: restart docker
+  tags: docker
