@@ -109,7 +109,7 @@ First create a playbook including the gocd-agent role, naming it gocd.yml
 - name: gocd
   hosts: gocd-agent
   roles:
-    - ansible-gocd-agent
+    - gocd-agent
 ```
 
 Use *ansible.host* as inventory. Run the playbook only for the remote host *gocd-agent*. Use *vagrant* as the SSH user to connect to the remote host. *-k* enables the SSH password prompt.
