@@ -12,26 +12,26 @@ ntp_server6: 1.uk.pool.ntp.org
 ntp_server7: ntp.ubuntu.com # fallback
 
 # Scala
-scala_version: 2.10.4
+scala_version: 2.11.2
 
 # Maven
-maven_version: 3.2.3
+maven_version: 3.2.5
 
 # Ant
 ant_version: 1.9.4
 
 # Gradle
-gradle_version: 2.2
+gradle_version: 2.2.1
 
 # SBT
-sbt_version: 0.13.6
+sbt_version: 0.13.7
 
 # NodeJs
-nodejs_version: v0.10.33
+nodejs_version: v0.10.34
 nodejs_global_packages:
   - nodemon
   - debug
   - foreman
 
 # GOCD
-gocd_version: 14.3.0-1186
+gocd_version: 14.4.0-1356
