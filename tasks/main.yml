@@ -6,11 +6,6 @@
   sudo: yes
   tags: update
 
-- name: Upgrade OS
-  apt: upgrade=safe
-  sudo: yes
-  tags: update  
-
 - include: base.yml 
   sudo: yes
   tags: base
