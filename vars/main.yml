@@ -35,3 +35,6 @@ nodejs_global_packages:
 
 # GOCD
 gocd_version: 14.4.0-1356
+
+# Oracle JDK
+jdk_version: 8
