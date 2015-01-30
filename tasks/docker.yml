@@ -1,8 +1,27 @@
 ---
 # tasks file for docker
 
-- name: Install Docker packages
-  apt: pkg=docker.io state=latest
+- name: Add Ubuntu key server
+  apt_key:
+    keyserver: "{{ ubuntu_keyserver }}"
+    id: "{{ ubuntu_keyserver_key }}"
+    state: present
+    validate_certs: no
+  tags: docker  
+
+- name: Add Docker Ubuntu PPA
+  apt_repository:
+    repo: "{{ ubuntu_docker_repo }}"
+    state: present
+  tags: docker
+
+- name: Install Docker LXC & Apt Transport HTTP
+  apt:
+    name: "{{ item }}"
+    state: latest
+  with_items:
+    - lxc-docker
+    - apt-transport-https
   tags: docker
 
 - name: Create Docker symlink
