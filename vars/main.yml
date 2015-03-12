@@ -38,3 +38,9 @@ gocd_version: 14.4.0-1356
 
 # Oracle JDK
 jdk_version: 8
+
+# DEBIAN BASED REPOS & Keys
+ubuntu_keyserver: "keyserver.ubuntu.com"
+ubuntu_keyserver_key: "36A1D7869245C8950F966E92D8576A8BA88D21E9"
+ubuntu_docker_repo: "deb https://get.docker.com/ubuntu docker main"
+ubuntu_ansible_repo: "ppa:ansible/ansible"
