@@ -18,7 +18,7 @@ scala_version: 2.11.2
 maven_version: 3.2.5
 
 # Ant
-ant_version: 1.9.4
+ant_version: 1.9.6
 
 # Gradle
 gradle_version: 2.2.1
@@ -44,3 +44,6 @@ ubuntu_keyserver: "keyserver.ubuntu.com"
 ubuntu_keyserver_key: "36A1D7869245C8950F966E92D8576A8BA88D21E9"
 ubuntu_docker_repo: "deb https://get.docker.com/ubuntu docker main"
 ubuntu_ansible_repo: "ppa:ansible/ansible"
+
+# reverse compatibility for docker.io install name
+docker_command: docker.io
