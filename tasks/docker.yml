@@ -25,14 +25,14 @@
   tags: docker
 
 - name: Create Docker symlink
-  file: src=/usr/bin/docker.io dest=/usr/local/bin/docker state=link force=yes
+  file: src=/usr/bin/{{ docker_command }} dest=/usr/local/bin/docker state=link force=yes
   tags: docker
 
 - name: Add autocomplete
-  command: sed -i '$acomplete -F _docker docker' /etc/bash_completion.d/docker.io
+  command: sed -i '$acomplete -F _docker docker' /etc/bash_completion.d/{{ docker_command }}
   tags: docker
 
 - name: Expose Docker remote api
-  lineinfile: dest=/etc/default/docker.io line='DOCKER_OPTS="-H tcp://127.0.0.1:2375 -H unix:///var/run/docker.sock"' state=present
+  lineinfile: dest=/etc/default/{{ docker_command }} line='DOCKER_OPTS="-H tcp://127.0.0.1:2375 -H unix:///var/run/docker.sock"' state=present
   notify: restart docker
   tags: docker

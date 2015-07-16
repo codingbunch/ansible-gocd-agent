@@ -13,5 +13,5 @@
   sudo: yes
 
 - name: restart docker
-  service: name=docker.io state=restarted
-  sudo: yes  
+  service: name={{ docker_command }} state=restarted
+  sudo: yes
